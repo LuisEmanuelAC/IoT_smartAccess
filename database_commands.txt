@@ -1,0 +1,56 @@
+CREATE TABLE usuarios (
+  ID INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(50) NOT NULL,
+  correo VARCHAR(50) NOT NULL,
+  contraseña VARCHAR(50) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE docentes (
+  ID INT NOT NULL AUTO_INCREMENT,
+  ID_usuario INT NOT NULL,
+  carrera VARCHAR(50) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID_usuario) REFERENCES usuarios(ID)
+);
+
+CREATE TABLE materias (
+  ID INT NOT NULL AUTO_INCREMENT,
+  materia VARCHAR(50) NOT NULL,
+  ID_docente INT NOT NULL,
+  num_alumnos INT NOT NULL,
+  creditos INT NOT NULL,
+  turno VARCHAR(50) NOT NULL,
+  carrera VARCHAR(50) NOT NULL,
+  Aula VARCHAR(50) NOT NULL,
+  horario_inicio TIME NOT NULL,
+  horario_final TIME NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID_docente) REFERENCES docentes(ID)
+);
+
+CREATE TABLE alumnos (
+  ID INT NOT NULL AUTO_INCREMENT,
+  ID_usuario INT NOT NULL,
+  ID_materias INT NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID_usuario) REFERENCES usuarios(ID),
+  FOREIGN KEY (ID_materias) REFERENCES materias(ID)
+);
+
+CREATE TABLE administrativos (
+  ID INT NOT NULL AUTO_INCREMENT,
+  ID_usuario INT NOT NULL,
+  cargo VARCHAR(50) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID_usuario) REFERENCES usuarios(ID)
+);
+
+CREATE TABLE notificaciones (
+  ID INT NOT NULL AUTO_INCREMENT,
+  título VARCHAR(50) NOT NULL,
+  descripción VARCHAR(50) NOT NULL,
+  ID_docente INT NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID_docente) REFERENCES docentes(ID)
+);
