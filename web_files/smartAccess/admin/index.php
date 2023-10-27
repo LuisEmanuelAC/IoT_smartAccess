@@ -34,12 +34,11 @@ if ($_POST) {
                         <form method = "POST">
                         <div class = "form-group">
                         <label for="exampleInputEmail1">Correo</label>
-                        <input type="email" class="form-control" name="usuario" placeholder="Escribe tu correo electronico">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        <input type="email" class="form-control" name="usuario" placeholder="Escribe tu correo electronico">                     
                         </div>
                         <div class="form-group">
                         <label for="exampleInputPassword1">Contraseña</label>
-                        <input type="password" class="form-control" name="contraseña" placeholder="Escribe tu cotraseña">
+                        <input type="password" class="form-control" name="contrasena" placeholder="Escribe tu cotraseña">
                         </div> <br/>
 
                         <button type="submit" class="btn btn-primary">Sign In</button>
