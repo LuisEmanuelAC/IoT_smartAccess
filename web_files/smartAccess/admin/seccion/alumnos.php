@@ -4,15 +4,23 @@
 $txtID=(isset($_POST['txtID']))?$_POST['txtID']:"";
 $IntID=(int)$txtID;
 $txtNombre=(isset($_POST['txtNombre']))?$_POST['txtNombre']:"";
-$txtCarrera=(isset($_POST['txtCarrera']))?$_POST['txtCarrera']:"";
-$txtHInicio=(isset($_POST['txtHInicio']))?$_POST['txtHInicio']:"";
-$txtHFinal=(isset($_POST['txtHFinal']))?$_POST['txtHFinal']:"";
+$txtCorreo=(isset($_POST['txtCorreo']))?$_POST['txtCorreo']:"";
+$txtCont=(isset($_POST['txtCont']))?$_POST['txtCont']:"";
+$txtTipoU=(isset($_POST['txtTipoU']))?$_POST['txtTipoU']:"";
+$txtTurno=(isset($_POST['txtTurno']))?$_POST['txtTurno']:"";
+
+$txtIdUs=(isset($_POST['txtIdUs']))?$_POST['txtIdUs']:"";
+$txtIdMat=(isset($_POST['txtIdMat']))?$_POST['txtIdMat']:"";
+$txtAsist=(isset($_POST['txtAsist']))?$_POST['txtAsist']:"";
+
 $accion=(isset($_POST['accion']))?$_POST['accion']:"";
 
 switch ($accion) {
     case "Agregar":
         echo "agregar";
-        $sql = "INSERT INTO materias (nombre, carrera, hora_inicio, hora_final) VALUES ('$txtNombre', '$txtCarrera', '$txtHInicio', '$txtHFinal')";
+        $sql = "INSERT INTO usuarios (nombre, correo, contraseña, tipo_u, turno) VALUES ('$txtNombre', '$txtCorreo', '$txtCont', '$txtTipoU', '$txtTurno')";
+        $ejec = mysqli_query($conexion,$sql);        
+        $sql = "INSERT INTO alumnos (id_usuario, id_materia, asistencias ) VALUES ( '$txtIdUs', '$txtIdMat', '$txtAsist')";
         $ejec = mysqli_query($conexion,$sql);
         break;    
         
@@ -36,6 +44,9 @@ switch ($accion) {
 
 $sentenSQL= "SELECT * FROM materias";
 $resultado = $conexion->query($sentenSQL);
+
+$sentenSQL1= "SELECT * FROM materias";
+$resultado1 = $conexion->query($sentenSQL1);
 
 ?>
 
@@ -61,6 +72,21 @@ $resultado = $conexion->query($sentenSQL);
             <div class = "form-group">
             <label for="exampleInputEmail1">Carrera:</label>
             <input type="text" class="form-control" name="txtCarrera" id="txtCarrera" placeholder="Carrera">
+            </div>
+
+            <div class = "form-group">
+            <label for="exampleInputEmail1">Carrera:</label>
+            <select name="tu_lista">
+            <?php
+            if ($resultado1->num_rows > 0) {
+            // Salida de cada fila
+            while($fila = $resultado1->fetch_assoc()) {
+                echo '<option value="'.$fila['id'].'">'.$fila['nombre'].'</option>';
+            }
+            } else {
+            echo "0 resultados";
+            }
+            ?>
             </div>
 
             <div class = "form-group">

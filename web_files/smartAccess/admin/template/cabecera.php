@@ -21,7 +21,7 @@
         <div class="nav navbar-nav">
             <a class="nav-item nav-link active" href="#" aria-current="page">Administrador <span class="visually-hidden">(current)</span></a>
             <a class="nav-item nav-link" href="<?php echo $url;?>/admin/inicio.php">Inicio</a>
-            <a class="nav-item nav-link" href="#">Alumnos</a>
+            <a class="nav-item nav-link" href="<?php echo $url;?>/admin/seccion/alumnos.php" >Alumnos</a>
             <a class="nav-item nav-link" href="#">Docentes</a>
             <a class="nav-item nav-link" href="<?php echo $url;?>/admin/seccion/materias.php">Materias</a>
             <a class="nav-item nav-link" href="#">Salones</a>
