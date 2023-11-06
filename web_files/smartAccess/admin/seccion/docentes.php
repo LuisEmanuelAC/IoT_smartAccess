@@ -8,9 +8,8 @@ $usua_txtCorreo=(isset($_POST['usua_txtCorreo']))?$_POST['usua_txtCorreo']:"";
 $usua_txtContr=(isset($_POST['usua_txtContr']))?$_POST['usua_txtContr']:"";
 $usua_txtTurno=(isset($_POST['usua_txtTurno']))?$_POST['usua_txtTurno']:"";
 
-$alum_txtIdUs=(isset($_POST['alum_txtIdUs']))?$_POST['alum_txtIdUs']:"";
-$alum_txtIdMat=(isset($_POST['alum_txtIdMat']))?$_POST['alum_txtIdMat']:"";
-$alum_txtAsist=(isset($_POST['alum_txtAsist']))?$_POST['alum_txtAsist']:"";
+$docen_txtIdUs=(isset($_POST['alum_txtIdUs']))?$_POST['alum_txtIdUs']:"";
+$docen_txtEstado=(isset($_POST['docen_txtEstado']))?$_POST['docen_txtEstado']:"";
 
 $accion=(isset($_POST['accion']))?$_POST['accion']:"";
 
@@ -21,45 +20,41 @@ switch ($accion) {
         if ($conexion->query($sql) === TRUE) {
             $IntIdUs = $conexion->insert_id;
         } else { echo "Error: " . $sql . "<br>" . $conexion->error; }
-
-        $IntIdMat=(int)$alum_txtIdMat;
-       
-        $sql = "SELECT id FROM materias WHERE id = '$IntIdMat'";
-        $resultado = $conexion->query($sql);
-        if ($resultado->num_rows > 0) {
-            $sql = "INSERT INTO alumnos (id_usuario, id_materia) VALUES ('$IntIdUs', '$IntIdMat')";
+   
+        if ($conexion->num_rows > 0) {
+            $sql = "INSERT INTO docentes (id_usuario, estado) VALUES ('$IntIdUs', '0')";
             if ($conexion->query($sql) !== TRUE) { echo "Error: " . $sql . "<br>" . $conexion->error; }
-        } else { echo "Error: id_materia '$IntIdMat' no existe en la tabla materias."; }
-        header("Location:alumnos.php");
+        } else { echo "Error: id_docentes '$IntIdMat' no existe en la tabla docentes."; }
+        header("Location:docentes.php");
         break;    
         
     case "Modificar":
-        $sql = "SELECT * FROM alumnos WHERE id=$IntID";
+        $sql = "SELECT * FROM docentes WHERE id=$IntID";
         $resultado = $conexion->query($sql);
         $alumno = $resultado->fetch_assoc();
-        $IntIdUs=(int)$alumno['id_usuario'];
-        $IntIdMat=(int)$alum_txtIdMat;      
+        $IntIdUs=(int)$alumno['id_usuario'];        
 
         $sql = "UPDATE usuarios SET nombre='$usua_txtNombre', correo='$usua_txtCorreo', contrasena='$usua_txtContr', turno='$usua_txtTurno' WHERE id=$IntIdUs";
         $resultado = $conexion->query($sql);
 
-        $sql = "UPDATE alumnos SET id_usuario='$IntIdUs', id_materia='$IntIdMat' WHERE id=$IntID";
+        $sql = "UPDATE docentes SET id_usuario='$IntIdUs', estado='0' WHERE id=$IntID";
         $resultado = $conexion->query($sql);
         
-        header("Location:alumnos.php");
+        header("Location:docentes.php");
         break;  
 
     case "Cancelar":
-        header("Location:alumnos.php");
+        header("Location:docentes.php");
         break;
     case "Seleccionar": 
         $sql = "SELECT * FROM alumnos WHERE id=$IntID";
         $resultado = $conexion->query($sql);
         $alumno = $resultado->fetch_assoc();
         if ($resultado->num_rows > 0){
+        header("Location:docentes.php");
             $alum_IntIdUsua = $alumno['id_usuario']; 
-            $alum_txtIdMat = $alumno['id_materia'];
-            $alum_txtAsist=$alumno['asistencias'];
+            $alum_IntIdUsua = $alumno['id_usuario'];
+    
         }        
         $sql = "SELECT * FROM usuarios WHERE id=$alum_IntIdUsua";
         $resultado2 = $conexion->query($sql);

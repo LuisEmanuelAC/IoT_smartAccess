@@ -17,18 +17,21 @@
 
     <?php $url="http://".$_SERVER['HTTP_HOST']."/smartaccess" ?>
 
-    <nav class="navbar navbar-expand navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary fixed-top">
         <div class="nav navbar-nav">
-            <a class="nav-item nav-link active" href="#" aria-current="page">Administrador <span class="visually-hidden">(current)</span></a>
-            <a class="nav-item nav-link" href="<?php echo $url;?>/admin/inicio.php">Inicio</a>
-            <a class="nav-item nav-link" href="<?php echo $url;?>/admin/seccion/alumnos.php" >Alumnos</a>
-            <a class="nav-item nav-link" href="#">Docentes</a>
-            <a class="nav-item nav-link" href="<?php echo $url;?>/admin/seccion/materias.php">Materias</a>
-            <a class="nav-item nav-link" href="#">Salones</a>
-            <a class="nav-item nav-link" href="<?php echo $url;?>/admin/seccion/cerrar.php">Cerrar</a>
+            <a class="nav-item nav-link text-white active" href="#" aria-current="page">Administrador <span class="visually-hidden">(current)</span></a>
+            <a class="nav-item nav-link text-white" href="<?php echo $url;?>/admin/inicio.php">Inicio</a>
+            <a class="nav-item nav-link text-white" href="<?php echo $url;?>/admin/seccion/alumnos.php">Alumnos</a>
+            <a class="nav-item nav-link text-white" href="<?php echo $url;?>/admin/seccion/docentes.php">Docentes</a>
+            <a class="nav-item nav-link text-white" href="<?php echo $url;?>/admin/seccion/materias.php">Materias</a>
+            <a class="nav-item nav-link text-white" href="<?php echo $url;?>/admin/seccion/salones.php">Salones</a>
+            <a class="nav-item nav-link text-white" href="<?php echo $url;?>/admin/seccion/admins.php">Admins</a>
+            <a class="nav-item nav-link " href="<?php echo $url;?>/index.php">Cerrar</a>
         </div>
     </nav>
 
     <div class="container">
+    <br>
+    <br>
     <br>
         <div class="row">
