@@ -2,7 +2,7 @@
 $host = "localhost";
 $usuario = "root";
 $contrasena = "";
-$base_de_datos = "db_sa";
+$base_de_datos = "smart-access";
 
 $conexion = new mysqli($host, $usuario, $contrasena, $base_de_datos);
 
