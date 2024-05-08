@@ -21,7 +21,7 @@ if ($_POST) {
         //print_r('se creo la imagen');
     }  
 
-    $sql=$conn->prepare("INSERT INTO `tbl_usuarios` (`ID`, `nombre`, `foto`, `correo`, `contraseña`, `tipo`) VALUES (NULL, :nombre, :foto, :correo, :contrasena, :tipo);");
+    $sql=$conn->prepare("INSERT INTO `tbl_usuarios` (`ID`, `nombre`, `foto`, `correo`, `contraseña`, `tipo`) VALUES (NULL, :nombre, :foto, :correo, :contrasena, :tipo)");
 
     $sql->bindParam(":nombre",$fullname, PDO::PARAM_STR);
     $sql->bindParam(":foto",$name_file_image);
@@ -55,17 +55,17 @@ include("../../templates/header.php"); ?>
 
                 <div class="form-group">
                     <input type="text" class="form-control form-control-user" name="fullname" id="fullname"
-                        aria-describedby="helpId" placeholder="Nombre...">
+                        aria-describedby="helpId" placeholder="Nombre..." required>
                 </div>
 
                 <div class="form-group">
                     <input type="email" class="form-control form-control-user" name="email" id="email"
-                        aria-describedby="emailHelp" placeholder="Correo...">
+                        aria-describedby="emailHelp" placeholder="Correo..." required>
                 </div>
 
                 <div class="form-group mb-3 d-flex align-items-center">
                     <input type="password" class="form-control form-control-user" name="password" id="password"
-                        placeholder="Contraseña...">
+                        placeholder="Contraseña..." required>
                     <a href="#" class="btn btn-warning btn-circle">
                         <i class="fas fa-eye" id="togglePassword"></i>
                     </a>
@@ -73,7 +73,7 @@ include("../../templates/header.php"); ?>
 
                 <div class="form-group">
                     <input type="text" class="form-control form-control-user" name="tipo" id="tipo"
-                        aria-describedby="helpId" placeholder="Tipo...">
+                        aria-describedby="helpId" placeholder="Tipo..." required>
                 </div>
 
                 <div class="form-group">

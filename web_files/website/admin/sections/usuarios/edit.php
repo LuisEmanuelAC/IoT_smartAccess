@@ -70,7 +70,7 @@ include("../../templates/header.php"); ?>
 
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Editar usuario</h1>
-    <p class="mb-4">Llena este formulario y presiona el botón de añadir para crear un nuevo usuario</p>
+    <p class="mb-4">Llena este formulario y presiona el botón de actualizar para modificar el usuario</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -83,17 +83,17 @@ include("../../templates/header.php"); ?>
 
                 <div class="form-group">
                     <input value="<?php echo $fullname;?>" type="text" class="form-control form-control-user"
-                        name="fullname" id="fullname" aria-describedby="helpId" placeholder="Nombre...">
+                        name="fullname" id="fullname" aria-describedby="helpId" placeholder="Nombre..." required>
                 </div>
 
                 <div class="form-group">
                     <input value="<?php echo $email;?>" type="email" class="form-control form-control-user" name="email"
-                        id="email" aria-describedby="emailHelp" placeholder="Correo...">
+                        id="email" aria-describedby="emailHelp" placeholder="Correo..." required>
                 </div>
 
                 <div class="form-group mb-3 d-flex align-items-center">
                     <input type="password" class="form-control form-control-user" name="password" id="password"
-                        placeholder="Contraseña...">
+                        placeholder="Contraseña..." required>
                     <a href="#" class="btn btn-warning btn-circle">
                         <i class="fas fa-eye" id="togglePassword"></i>
                     </a>
@@ -101,7 +101,7 @@ include("../../templates/header.php"); ?>
 
                 <div class="form-group">
                     <input value="<?php echo $type;?>" type="text" class="form-control form-control-user" name="tipo"
-                        id="tipo" aria-describedby="helpId" placeholder="Tipo...">
+                        id="tipo" aria-describedby="helpId" placeholder="Tipo..." required>
                 </div>
 
                 <div class="form-group">
