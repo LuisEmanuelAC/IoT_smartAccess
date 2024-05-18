@@ -64,6 +64,8 @@
 <!-- Page level custom scripts -->
 <script src="<?php echo $url_base; ?>js/demo/datatables-demo.js"></script>
 
+
+
 </body>
 
 </html>

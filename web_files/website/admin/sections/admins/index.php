@@ -136,7 +136,7 @@ Swal.fire({
                             if($sql->rowCount() > 0){ ?>
                             <td scope="col"><?php echo $regis_u['nombre']; ?></td>
                             <td scope="col">
-                                <img width="100" src="../../../img/users/<?php echo $regis_u['foto']; ?>" />
+                                <img width="50" src="../../../img/users/<?php echo $regis_u['foto']; ?>" />
                             </td>
                             <td scope="col"><?php echo $regis_u['correo']; ?></td>
                             <?php } ?>

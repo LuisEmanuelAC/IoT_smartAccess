@@ -1,14 +1,15 @@
 <?php 
 include("../../config/bd.php");
 
-$job = "";
+$carrera = "";
+
 //insertar lo de la tabla a la BD
 if ($_POST) {
     $fullname=(isset($_POST['fullname']))?$_POST['fullname']:"";
     $foto=(isset($_FILES['image']['name']))?$_FILES['image']['name']:"";
     $email=(isset($_POST['email']))?$_POST['email']:"";
     $password=(isset($_POST['password']))?md5($_POST['password']):"";  
-    $job=(isset($_POST['job']))?$_POST['job']:"";
+    $carrera=(isset($_POST['carrera']))?$_POST['carrera']:"";
 
 
     $image_date=new Datetime();
@@ -21,7 +22,7 @@ if ($_POST) {
         //print_r('se creo la imagen');
     }  
 
-    $sql=$conn->prepare("INSERT INTO `tbl_usuarios` (`ID`, `nombre`, `foto`, `correo`, `contraseña`, `tipo`) VALUES (NULL, :nombre, :foto, :correo, :contrasena, 'admin')");
+    $sql=$conn->prepare("INSERT INTO `tbl_usuarios` (`ID`, `nombre`, `foto`, `correo`, `contraseña`, `tipo`) VALUES (NULL, :nombre, :foto, :correo, :contrasena, 'docente')");
 
     $sql->bindParam(":nombre",$fullname, PDO::PARAM_STR);
     $sql->bindParam(":foto",$name_file_image);
@@ -31,10 +32,10 @@ if ($_POST) {
 
     $last_id = $conn->lastInsertId();
 
-    $sql=$conn->prepare("INSERT INTO `tbl_adminis` (`ID`, `ID_usuario`, `cargo`) VALUES (NULL, :ID_usuario, :cargo)");
+    $sql=$conn->prepare("INSERT INTO `tbl_docentes` (`ID`, `ID_usuario`, `carrera`) VALUES (NULL, :ID_usuario, :carrera)");
  
     $sql->bindParam(":ID_usuario",$last_id);
-    $sql->bindParam(":cargo",$job, PDO::PARAM_STR);
+    $sql->bindParam(":carrera",$carrera, PDO::PARAM_STR);
     $sql->execute();
 
     $message="successfully-added";
@@ -48,8 +49,8 @@ include("../../templates/header.php"); ?>
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Crear administrador</h1>
-    <p class="mb-4">Llena este formulario y presiona el botón de añadir para crear un nuevo administrador</p>
+    <h1 class="h3 mb-2 text-gray-800">Crear docente</h1>
+    <p class="mb-4">Llena este formulario y presiona el botón de añadir para crear un nuevo usuario</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -79,19 +80,19 @@ include("../../templates/header.php"); ?>
                 </div>
 
                 <nav class="navbar navbar-expand navbar-light bg-light md-4">
-                    <a class="navbar-brand" href="#">Cargo</a>
+                    <a class="navbar-brand" href="#">Carreras</a>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
-                            <select required name="job" id="job" class="form-select form-select-sm form-control"
+                            <select required name="carrera" id="carrera" class="form-select form-select-sm form-control"
                                 aria-label="Small select example" require>
-                                <option selected>cargo</option>
-                                <option value="director" <?php if($job == 'director') echo 'selected'; ?>>Director
+                                <option selected>carreras</option>
+                                <option value="ing_SC" <?php if($carrera == 'ing_SC') echo 'selected'; ?>>Ing. en
+                                    sistema computacionales
                                 </option>
-                                <option value="jefe car" <?php if($job == 'jefe car') echo 'selected'; ?>>Jef@ de
-                                    carrera
+                                <option value="ing_arc" <?php if($carrera == 'ing_arc') echo 'selected'; ?>>Ing.
+                                    arquitectura</option>
+                                <option value="ing_C" <?php if($carrera == 'ing_C') echo 'selected'; ?>>Ing. Civil
                                 </option>
-                                <option value="tecnico" <?php if($job == 'tecnico') echo 'selected'; ?>>Tecnico de
-                                    sistemas</option>
                             </select>
                         </li>
                     </ul>
@@ -99,11 +100,17 @@ include("../../templates/header.php"); ?>
 
                 <br>
 
-                <div class="form-group">
-                    <label for="image" class="form-label">Foto</label>
-                    <input type="file" class="form-control form-control-user" name="image" id="image"
-                        aria-describedby="fileHelpId" placeholder="Foto..." required>
-                </div>
+                <nav class="navbar navbar-expand navbar-light bg-light md-4">
+                    <a class="navbar-brand" href="#">Fotos</a>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <input type="file" class="form-control form-control-user" name="image" id="image"
+                                aria-describedby="fileHelpId" placeholder="Foto..." required>
+                        </li>
+                    </ul>
+                </nav>
+
+                <br>
 
                 <button type="submit" class="btn btn-success btn-icon-split">
                     <span class="icon text-white-50">

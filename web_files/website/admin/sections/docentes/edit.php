@@ -4,36 +4,44 @@ include("../../config/bd.php");
 //exportar de la BD a la tabla
 if(isset($_GET['txtID'])){
     $txtID=(isset($_GET['txtID']))?$_GET['txtID']:"";
-    $sql=$conn->prepare("SELECT * FROM tbl_usuarios WHERE id=:id");
+    $sql=$conn->prepare("SELECT * FROM tbl_docentes WHERE id=:id");
     $sql->bindParam(":id",$txtID);
     $sql->execute();
-    $regis=$sql->fetch(PDO::FETCH_LAZY);
+    $regis_a=$sql->fetch(PDO::FETCH_LAZY);
 
-    $fullname=$regis['nombre'];
-    $email=$regis['correo'];
-    $password=$regis['contraseña'];
-    $type=$regis['tipo'];
-    $image=$regis['foto'];
+    $ID_u=(int)$regis_a['ID_usuario'];
+    $sql=$conn->prepare("SELECT * FROM `tbl_usuarios` WHERE ID=:ID_u");
+    $sql->bindParam(":ID_u",$ID_u);
+    $sql->execute();
+    $regis_u=$sql->fetch(PDO::FETCH_ASSOC);
+
+    $fullname=$regis_u['nombre'];
+    $email=$regis_u['correo'];
+    $password=$regis_u['contraseña'];
+    $carrera=$regis_a['carrera'];
+    $image=$regis_u['foto'];
 
 }
 //actualizar el servicio
 if ($_POST) {
 
     $fullname=(isset($_POST['fullname']))?$_POST['fullname']:"";
-    $imagen=(isset($_FILES['image']['name']))?$_FILES['image']['name']:"";
+    $foto=(isset($_FILES['image']['name']))?$_FILES['image']['name']:"";
     $email=(isset($_POST['email']))?$_POST['email']:"";
-    $password=(isset($_POST['password']))?md5($_POST['password']):"";
-    $type=(isset($_POST['tipo']))?$_POST['tipo']:"";
+    $password=(isset($_POST['password']))?md5($_POST['password']):"";  
+    $carrera=(isset($_POST['carrera']))?$_POST['carrera']:"";
 
-    print_r($fullname);
+    $sql=$conn->prepare("UPDATE tbl_docentes SET carrera=:carrera WHERE ID=:ID_a");
+    $sql->bindParam(":ID_a",$txtID);
+    $sql->bindParam(":carrera",$carrera);
+    $sql->execute();
 
-    $sql=$conn->prepare("UPDATE tbl_usuarios SET nombre=:nombre, correo=:correo, contraseña=:contrasena, tipo=:tipo WHERE ID=:ID");
+    $sql=$conn->prepare("UPDATE tbl_usuarios SET nombre=:nombre, correo=:correo, contraseña=:contrasena WHERE ID=:ID_u");
 
-    $sql->bindParam(":ID",$txtID);
+    $sql->bindParam(":ID_u",$ID_u);
     $sql->bindParam(":nombre",$fullname, PDO::PARAM_STR);
     $sql->bindParam(":correo",$email, PDO::PARAM_STR);
-    $sql->bindParam(":contrasena",$password, PDO::PARAM_STR);
-    $sql->bindParam(":tipo",$type, PDO::PARAM_STR);
+    $sql->bindParam(":contrasena",$password, PDO::PARAM_STR);   
     $sql->execute();
 
     if ($_FILES["image"]["tmp_name"]!="") {
@@ -54,7 +62,7 @@ if ($_POST) {
         }
 
         $sql=$conn->prepare("UPDATE tbl_usuarios SET foto=:foto WHERE ID=:ID");
-        $sql->bindParam(":ID",$txtID);
+        $sql->bindParam(":ID",$ID_u);
         $sql->bindParam(":foto",$name_file_image);
         $sql->execute();
     }
@@ -69,13 +77,13 @@ include("../../templates/header.php"); ?>
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Editar usuario</h1>
-    <p class="mb-4">Llena este formulario y presiona el botón de actualizar para modificar el usuario</p>
+    <h1 class="h3 mb-2 text-gray-800">Editar docente</h1>
+    <p class="mb-4">Llena este formulario y presiona el botón de actualizar para modificar el docente</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Usuario: <?php echo $txtID; ?></h6>
+            <h6 class="m-0 font-weight-bold text-primary">Docente: <?php echo $txtID; ?></h6>
         </div>
         <div class="card-body">
 
@@ -99,10 +107,26 @@ include("../../templates/header.php"); ?>
                     </a>
                 </div>
 
-                <div class="form-group">
-                    <input value="<?php echo $type;?>" type="text" class="form-control form-control-user" name="tipo"
-                        id="tipo" aria-describedby="helpId" placeholder="Tipo..." required>
-                </div>
+                <nav class="navbar navbar-expand navbar-light bg-light md-4">
+                    <a class="navbar-brand" href="#">Carreras</a>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <select required name="carrera" id="carrera" class="form-select form-select-sm form-control"
+                                aria-label="Small select example" require>
+                                <option selected>carreras</option>
+                                <option value="ing_SC" <?php if($carrera == 'ing_SC') echo 'selected'; ?>>Ing. en
+                                    sistema computacionales
+                                </option>
+                                <option value="ing_arc" <?php if($carrera == 'ing_arc') echo 'selected'; ?>>Ing.
+                                    arquitectura</option>
+                                <option value="ing_C" <?php if($carrera == 'ing_C') echo 'selected'; ?>>Ing. Civil
+                                </option>
+                            </select>
+                        </li>
+                    </ul>
+                </nav>
+
+                <br>
 
                 <nav class="navbar navbar-expand navbar-light bg-light md-4">
                     <a class="navbar-brand" href="#">Fotos</a>
@@ -116,6 +140,8 @@ include("../../templates/header.php"); ?>
                         </li>
                     </ul>
                 </nav>
+
+                <br>
 
                 <button type="submit" class="btn btn-success btn-icon-split">
                     <span class="icon text-white-50">

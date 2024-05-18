@@ -69,7 +69,7 @@ $url_base="http://localhost/Iot_smartAccess/web_files/website/";
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/admins/index.php">
+                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/alumnos/index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Alumnos</span></a>
             </li>
@@ -79,7 +79,7 @@ $url_base="http://localhost/Iot_smartAccess/web_files/website/";
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/admins/index.php">
+                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/docentes/index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Docentes</span></a>
             </li>
@@ -89,7 +89,7 @@ $url_base="http://localhost/Iot_smartAccess/web_files/website/";
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/admins/index.php">
+                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/materias/index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Materias</span></a>
             </li>

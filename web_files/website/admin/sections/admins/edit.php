@@ -103,23 +103,45 @@ include("../../templates/header.php"); ?>
 
                 <div class="form-group mb-3 d-flex align-items-center">
                     <input type="password" class="form-control form-control-user" name="password" id="password"
-                        placeholder="Contraseña..." required>
+                        placeholder="Contraseña...">
                     <a href="#" class="btn btn-warning btn-circle">
                         <i class="fas fa-eye" id="togglePassword"></i>
                     </a>
                 </div>
 
-                <div class="form-group">
-                    <input value="<?php echo $job;?>" type="text" class="form-control form-control-user" name="job"
-                        id="job" aria-describedby="helpId" placeholder="Cargo..." required>
-                </div>
+                <nav class="navbar navbar-expand navbar-light bg-light md-4">
+                    <a class="navbar-brand" href="#">Cargo</a>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <select required name="job" id="job" class="form-select form-select-sm form-control"
+                                aria-label="Small select example" require>
+                                <option selected>cargo</option>
+                                <option value="director" <?php if($job == 'director') echo 'selected'; ?>>Director
+                                </option>
+                                <option value="jefe car" <?php if($job == 'jefe car') echo 'selected'; ?>>Jef@ de
+                                    carrera
+                                </option>
+                                <option value="tecnico" <?php if($job == 'tecnico') echo 'selected'; ?>>Tecnico de
+                                    sistemas</option>
+                            </select>
+                        </li>
+                    </ul>
+                </nav>
 
-                <div class="form-group">
-                    <label for="image" class="form-label">Foto</label>
-                    <img width="100" src="../../../img/users/<?php echo $image; ?>" />
-                    <input type="file" class="form-control form-control-user" name="image" id="image"
-                        aria-describedby="fileHelpId" placeholder="Foto...">
-                </div>
+                <br>
+
+                <nav class="navbar navbar-expand navbar-light bg-light md-4">
+                    <a class="navbar-brand" href="#">Fotos</a>
+                    <ul class="navbar-nav ml-auto">
+                        <li>
+                            <img width="50" src="../../../img/users/<?php echo $image; ?>" />
+                        </li>
+                        <li class="nav-item dropdown">
+                            <input type="file" class="form-control form-control-user" name="image" id="image"
+                                aria-describedby="fileHelpId" placeholder="Foto...">
+                        </li>
+                    </ul>
+                </nav>
 
                 <button type="submit" class="btn btn-success btn-icon-split">
                     <span class="icon text-white-50">
