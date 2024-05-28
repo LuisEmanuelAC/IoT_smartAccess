@@ -1,6 +1,6 @@
 <?php 
 
-include("../../config/bd.php");
+include("../../../config/bd.php");
 //exportar de la BD a la tabla
 if(isset($_GET['txtID'])){
     $txtID=(isset($_GET['txtID']))?$_GET['txtID']:"";
@@ -11,7 +11,7 @@ if(isset($_GET['txtID'])){
 
     $nombre=$regis['nombre'];
     $ID_docente=$regis['ID_docente'];
-    $aula=$regis['aula'];
+    $ID_aula=$regis['ID_aula'];
     $turno=$regis['turno'];
     $creditos=$regis['creditos'];
     $horario=$regis['horario'];
@@ -25,27 +25,39 @@ if ($_POST) {
 
     $nombre=(isset($_POST['nombre']))?$_POST['nombre']:"";
     $ID_docente=(isset($_POST['ID_docente']))?$_POST['ID_docente']:"";
-    $aula=(isset($_POST['aula']))?$_POST['aula']:"";
+    $ID_aula=(isset($_POST['ID_aula']))?$_POST['ID_aula']:"";
     $turno=(isset($_POST['turno']))?$_POST['turno']:"";
     $creditos=(isset($_POST['creditos']))?$_POST['creditos']:"";
     $list_horario=(isset($_POST['horario']))?$_POST['horario']:"";
 
-    $horario="";
-    foreach ($list_horario as $index => $dia) {
+    $horario = "";
+    $noComa = false;
+    
+    foreach ($list_horario as $index => $value) {
         if ($index == 0) {
-            $horario=$dia;
+            $horario = $value;
+            $noComa = ($value == "$");
+        } else {
+            if ($value == "$") {
+                $horario = $horario . $value;
+                $noComa = true;
+            } else {
+                if ($noComa) {
+                    $horario = $horario . $value;
+                } else {
+                    $horario = $horario . "," . $value;
+                }
+                $noComa = false;
+            }
         }
-        if (count($list_horario) > 1 && $index >= 1) {
-            $horario=$horario.",".$dia;
-        }
-    } 
+    }
 
-    $sql=$conn->prepare("UPDATE `tbl_materias` SET nombre=:nombre, ID_docente=:ID_docente, aula=:aula, turno=:turno, creditos=:creditos, horario=:horario WHERE ID=:ID");
+    $sql=$conn->prepare("UPDATE `tbl_materias` SET nombre=:nombre, ID_docente=:ID_docente, ID_aula=:ID_aula, turno=:turno, creditos=:creditos, horario=:horario WHERE ID=:ID");
 
     $sql->bindParam(":ID",$txtID);    
     $sql->bindParam(":nombre",$nombre, PDO::PARAM_STR);  
     $sql->bindParam(":ID_docente",$ID_docente);
-    $sql->bindParam(":aula",$aula);
+    $sql->bindParam(":ID_aula",$ID_aula);
     $sql->bindParam(":turno",$turno);
     $sql->bindParam(":creditos",$creditos, PDO::PARAM_STR);
     $sql->bindParam(":horario",$horario);
@@ -61,6 +73,11 @@ FROM tbl_usuarios u
 JOIN tbl_docentes d ON u.ID = d.ID_usuario");                                           
 $sql->execute();
 $list_docentes=$sql->fetchAll(PDO::FETCH_ASSOC);
+
+//Lista de aulas
+$sql=$conn->prepare("SELECT * FROM `tbl_aulas`");
+$sql->execute();
+$list_aulas=$sql->fetchAll(PDO::FETCH_ASSOC);
 
 include("../../templates/header.php"); ?>
 
@@ -115,22 +132,27 @@ include("../../templates/header.php"); ?>
                     <a class="navbar-brand">Aula</a>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
-                            <select required name="aula" id="aula" class="form-select form-select-sm form-control"
-                                aria-label="Small select example" require>
-                                <option selected>Aulas</option>
-                                <option value="LC1" <?php if($aula == 'LC1') echo 'selected'; ?>>LC1</option>
-                                <option value="LC2" <?php if($aula == 'LC2') echo 'selected'; ?>>LC2</option>
-                                <option value="LC3" <?php if($aula == 'LC3') echo 'selected'; ?>>LC3</option>
-                                <option value="LC4" <?php if($aula == 'LC4') echo 'selected'; ?>>LC4</option>
-                                <option value="LC5" <?php if($aula == 'LC5') echo 'selected'; ?>>LC5</option>
-                                <option value="LC6" <?php if($aula == 'LC6') echo 'selected'; ?>>LC6</option>
-
+                            <select required name="ID_aula" id="ID_aula" class="form-select form-select-sm form-control"
+                                aria-label="Small select example">
+                                <option selected>menu aula</option>
+                                <?php                    
+                                if ($list_aulas) {
+                                    // Salida de cada fila
+                                    foreach($list_aulas as $regis_a){ ?>
+                                <option value="<?php echo $regis_a['ID']; ?>"
+                                    <?php if($ID_aula == $regis_a['ID']) echo 'selected'; ?>>
+                                    <?php echo $regis_a['nombre'] ; ?>
+                                </option>
+                                <?php
+                                    }
+                                } else {?>
+                                <option value="0">nada</option>
+                                <?php
+                                }?>
                             </select>
                         </li>
                     </ul>
                 </nav>
-
-
 
                 <nav class="navbar navbar-expand navbar-light bg-light md-4">
                     <a class="navbar-brand">Turno</a>
@@ -164,41 +186,23 @@ include("../../templates/header.php"); ?>
                             <h6 class="m-0 font-weight-bold text-primary">Horario</h6>
                         </div>
                         <div class="card-body" id="horarioContainer">
-
                             <?php 
-                            $dia = "";
-                            $hi = "";
-                            $hf = "";
-                            $list_horario = explode("$", $regis['horario']);               
-                                foreach ($list_horario as $key => $value) { ?>
-                            <?php
-                                        $horario_dia = explode(",", $value);                   
-                                        for ($i=0; $i < count($horario_dia); $i++) { 
-                                            switch ($horario_dia[$i]) {
-                                                case 'd>':
-                                                    $i++;                                        
-                                                    $dia = $horario_dia[$i];                                     
-                                                    break;
-                                                
-                                                case 'hi>':
-                                                    $i++;                                     
-                                                    $hi = $horario_dia[$i];                                     
-                                                    break;
-
-                                                case 'hf>':
-                                                    $i++;                                           
-                                                    $hf = $horario_dia[$i];                                     
-                                                    break;
-                                                default:
-                                                    break;                                        
-                                            }
-                                        }?>
+                            $horario_m = explode("$", $regis['horario']);
+                            for ($i=0; $i < count($horario_m) - 1; $i++) { 
+                                $horario_dia = explode(",", $horario_m[$i]);        
+                                if (isset($horario_dia[0])) {
+                                    $dia = $horario_dia[0];
+                                }
+                                if (isset($horario_dia[1])) {
+                                    $hi = $horario_dia[1];                           
+                                }
+                                if (isset($horario_dia[2])) {
+                                    $hf = $horario_dia[2];
+                                }?>
                             <nav class="navbar navbar-expand navbar-light bg-light md-4">
-                                <a class="navbar-brand">Día: <?php echo ++$key; ?></a>
+                                <a class="navbar-brand">Día: <?php echo $i + 1; ?></a>
                                 <ul class="navbar-nav ml-auto">
                                     <li class="nav-item dropdown">
-                                        <input value="d>" type="text" class="form-control" name="horario[]" id="horario"
-                                            style="display: none;">
                                         <label class="form-label">Día:</label>
                                         <select required name="horario[]" id="horario"
                                             class="form-select form-select-sm form-control"
@@ -218,8 +222,6 @@ include("../../templates/header.php"); ?>
                                         </select>
                                     </li>
 
-                                    <input value="hi>" type="text" class="form-control" name="horario[]" id="horario"
-                                        style="display: none;">
                                     <li class="nav-item dropdown">
                                         <label class="form-label">Hora inicio:</label>
                                         <input value="<?php echo date("H:i:s",strtotime($hi)); ?>" type="time"
@@ -227,15 +229,13 @@ include("../../templates/header.php"); ?>
                                             aria-describedby="helpId" required>
                                     </li>
 
-                                    <input value="hf>" type="text" class="form-control" name="horario[]" id="horario"
-                                        style="display: none;">
                                     <li class="nav-item dropdown">
                                         <label class="form-label">Hora final:</label>
                                         <input value="<?php echo date("H:i:s",strtotime($hf)); ?>" type="time"
                                             class="form-control form-control-user" name="horario[]" id="horario"
                                             aria-describedby="helpId" required>
                                     </li>
-                                    <?php if ($key > 1) { ?>
+                                    <?php if ($i > 0) { ?>
                                     <button type="button" class="btn btn-warning" onclick="removeDayField(this)">
                                         <i class="fas fa-minus"></i>
                                     </button>
@@ -285,6 +285,6 @@ include("../../templates/header.php"); ?>
 <?php include("../../templates/footer.php"); ?>
 
 <script>
-var cont = <?php echo $key; ?>;
+var cont = <?php echo $i; ?>;
 </script>
-<script src="../../templates/js/list_horario.js"></script>
+<script src="../../../js/list_horario.js"></script>

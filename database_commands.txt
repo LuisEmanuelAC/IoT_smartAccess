@@ -1,56 +1,78 @@
-CREATE TABLE usuarios (
+CREATE TABLE tbl_usuarios (
   ID INT NOT NULL AUTO_INCREMENT,
-  nombre VARCHAR(50) NOT NULL,
-  correo VARCHAR(50) NOT NULL,
-  contraseña VARCHAR(50) NOT NULL,
+  nombre VARCHAR(225) NOT NULL,
+  foto VARCHAR(225) NOT NULL,
+  correo VARCHAR(225) NOT NULL,
+  contraseña VARCHAR(225) NOT NULL,
+  tipo VARCHAR(225) NOT NULL,
   PRIMARY KEY (ID)
 );
 
-CREATE TABLE docentes (
+CREATE TABLE tbl_docentes (
   ID INT NOT NULL AUTO_INCREMENT,
   ID_usuario INT NOT NULL,
-  carrera VARCHAR(50) NOT NULL,
+  carrera VARCHAR(225) NOT NULL,
   PRIMARY KEY (ID),
-  FOREIGN KEY (ID_usuario) REFERENCES usuarios(ID)
+  FOREIGN KEY (ID_usuario) REFERENCES tbl_usuarios(ID)
 );
 
-CREATE TABLE materias (
+CREATE TABLE tbl_materias (
   ID INT NOT NULL AUTO_INCREMENT,
-  materia VARCHAR(50) NOT NULL,
+  materia VARCHAR(225) NOT NULL,
   ID_docente INT NOT NULL,
   num_alumnos INT NOT NULL,
   creditos INT NOT NULL,
-  turno VARCHAR(50) NOT NULL,
-  carrera VARCHAR(50) NOT NULL,
-  Aula VARCHAR(50) NOT NULL,
-  horario_inicio TIME NOT NULL,
-  horario_final TIME NOT NULL,
+  turno VARCHAR(225) NOT NULL,
+  carrera VARCHAR(225) NOT NULL,
+  ID_aula INT NOT NULL,
+  horario_IF VARCHAR(225) NOT NULL,
   PRIMARY KEY (ID),
-  FOREIGN KEY (ID_docente) REFERENCES docentes(ID)
+  FOREIGN KEY (ID_docente) REFERENCES tbl_docentes(ID)
+  FOREIGN KEY (ID_aula) REFERENCES tbl_aulas(ID)
 );
 
-CREATE TABLE alumnos (
+CREATE TABLE tbl_alumnos (
   ID INT NOT NULL AUTO_INCREMENT,
   ID_usuario INT NOT NULL,
   ID_materias INT NOT NULL,
+  carrera VARCHAR(225) NOT NULL,
   PRIMARY KEY (ID),
-  FOREIGN KEY (ID_usuario) REFERENCES usuarios(ID),
-  FOREIGN KEY (ID_materias) REFERENCES materias(ID)
+  FOREIGN KEY (ID_usuario) REFERENCES tbl_usuarios(ID),
+  FOREIGN KEY (ID_materias) REFERENCES tbl_materias(ID)
 );
 
-CREATE TABLE administrativos (
+CREATE TABLE tbl_adminis (
   ID INT NOT NULL AUTO_INCREMENT,
   ID_usuario INT NOT NULL,
-  cargo VARCHAR(50) NOT NULL,
+  cargo VARCHAR(225) NOT NULL,
   PRIMARY KEY (ID),
-  FOREIGN KEY (ID_usuario) REFERENCES usuarios(ID)
+  FOREIGN KEY (ID_usuario) REFERENCES tbl_usuarios(ID)
 );
 
-CREATE TABLE notificaciones (
+CREATE TABLE tbl_notificac (
   ID INT NOT NULL AUTO_INCREMENT,
-  título VARCHAR(50) NOT NULL,
-  descripción VARCHAR(50) NOT NULL,
+  título VARCHAR(225) NOT NULL,
+  descripción VARCHAR(225) NOT NULL,
   ID_docente INT NOT NULL,
   PRIMARY KEY (ID),
-  FOREIGN KEY (ID_docente) REFERENCES docentes(ID)
+  FOREIGN KEY (ID_docente) REFERENCES tbl_docentes(ID)
+);
+
+CREATE TABLE tbl_aulas (
+  ID INT NOT NULL AUTO_INCREMENT,
+  estado VARCHAR(225) NOT NULL,
+  lugar VARCHAR(500) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE tbl_control_aulas (
+  ID INT NOT NULL AUTO_INCREMENT,
+  ID_usuario INT NOT NULL,
+  ID_aula INT NOT NULL,
+  fecha date NOT NULL,
+  h_inicio time NOT NULL,
+  h_final time,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID_usuario) REFERENCES tbl_usuarios(ID),
+  FOREIGN KEY (ID_aula) REFERENCES tbl_aulas(ID)
 );

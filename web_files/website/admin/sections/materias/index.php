@@ -1,5 +1,5 @@
 <?php 
-include("../../config/bd.php");
+include("../../../config/bd.php");
 
 //Borrar
 if(isset($_GET['txtID'])){
@@ -8,8 +8,8 @@ if(isset($_GET['txtID'])){
     $sql=$conn->prepare("SELECT * FROM `tbl_materias` WHERE ID=:id");
     $sql->bindParam(":id",$txtID);
     $sql->execute();
-    $regis_a=$sql->fetch(PDO::FETCH_ASSOC);
-    $ID_u=(int)$regis_a['ID_usuario'];
+    $regis_m=$sql->fetch(PDO::FETCH_ASSOC);
+    $ID_u=(int)$regis_m['ID_usuario'];
 
     $sql=$conn->prepare("DELETE FROM tbl_materias WHERE id=:id");
     $sql->bindParam(":id",$txtID);
@@ -152,45 +152,31 @@ Swal.fire({
                                 </ul>
 
                             </td>
-                            <td scope="col"><?php echo $regis['aula']; ?></td>
+                            <td scope="col">
+                                <?php
+                                // lista de aulas
+                                $sql=$conn->prepare("SELECT * FROM tbl_aulas WHERE ID=:id_a");
+                                $sql->bindParam(":id_a",$regis['ID_aula']);
+                                $sql->execute();
+                                $regis_a=$sql->fetch(PDO::FETCH_ASSOC);
+                                ?>
+                                <ul class="nav justify-content-center flex-column">
+                                    <li class="">
+                                        <a class="nav-link disabled">-> <?php echo $regis_a['nombre']; ?></a>
+                                    </li>
+                                </ul>
+
+                            </td>
                             <td scope="col"><?php echo $regis['turno']; ?></td>
                             <td scope="col"><?php echo $regis['creditos']; ?></td>
                             <td scope="col">
                                 <ul class="nav justify-content-center flex-column">
-                                    <?php $list_horario = explode("$", $regis['horario']); 
-                                foreach ($list_horario as $key => $value) { ?>
+                                    <?php $list_horario = explode("$", $regis['horario']);
+                                    foreach ($list_horario as $key => $value) { ?>
                                     <li class="">
-                                        <a class="nav-link disabled">
-                                            <?php
-                                    $horario_dia = explode(",", $value);                   
-                                    for ($i=0; $i < count($horario_dia); $i++) { 
-                                        switch ($horario_dia[$i]) {
-                                            case 'd>':
-                                                $i++;
-                                                echo "->Dia: ";
-                                                echo $horario_dia[$i];                                     
-                                                break;
-                                            
-                                            case 'hi>':
-                                                $i++;
-                                                echo "-hora I: ";
-                                                echo $horario_dia[$i];                                     
-                                                break;
-
-                                            case 'hf>':
-                                                $i++;
-                                                echo "-hora F: ";
-                                                echo $horario_dia[$i];                                     
-                                                break;
-                                            default:
-                                                break;                                        
-                                        }
-                                    }?>
-                                        </a>
+                                        <a class="nav-link disabled"><?php echo $value; ?></a>
                                     </li>
-                                    <?php
-                                }
-                                ?>
+                                    <?php } ?>
                                 </ul>
                             </td>
                             <td>

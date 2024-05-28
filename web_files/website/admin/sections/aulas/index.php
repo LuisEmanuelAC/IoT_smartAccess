@@ -4,29 +4,18 @@ include("../../../config/bd.php");
 //Borrar
 if(isset($_GET['txtID'])){
     $txtID=(isset($_GET['txtID']))?$_GET['txtID']:"";
-
-    $sql=$conn->prepare("SELECT * FROM `tbl_alumnos` WHERE ID=:id");
+    $sql=$conn->prepare("DELETE FROM tbl_aulas WHERE id=:id");
     $sql->bindParam(":id",$txtID);
-    $sql->execute();
-    $regis_a=$sql->fetch(PDO::FETCH_ASSOC);
-    $ID_u=(int)$regis_a['ID_usuario'];
-
-    $sql=$conn->prepare("DELETE FROM tbl_alumnos WHERE id=:id");
-    $sql->bindParam(":id",$txtID);
-    $sql->execute();
-
-    $sql=$conn->prepare("DELETE FROM tbl_usuarios WHERE id=:id");
-    $sql->bindParam(":id",$ID_u);
     $sql->execute();
 
     $message="successfully-removed";
     header("Location:index.php?message=".$message);
 }
 
-//Lista de servicios
-$sql=$conn->prepare("SELECT * FROM `tbl_alumnos`");
+//Lista de aulas
+$sql=$conn->prepare("SELECT * FROM `tbl_aulas`");
 $sql->execute();
-$list_alumnos=$sql->fetchAll(PDO::FETCH_ASSOC);
+$list_aulas=$sql->fetchAll(PDO::FETCH_ASSOC);
 
 include("../../templates/header.php"); ?>
 <script>
@@ -81,18 +70,19 @@ Swal.fire({
 ?>
 </script>
 
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Alumnos</h1>
-    <p class="mb-4">Esta tabla te deja ver una lista de los alumnos que existen y además podrás añadir, editar o
+    <h1 class="h3 mb-2 text-gray-800">Aulas</h1>
+    <p class="mb-4">Esta tabla te deja ver una lista de las aulas que existen y además podrás añadir, editar o
         eliminar los existentes</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Lista de alumnos</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Lista de aulas</h6>
             <a href="create.php" class="btn btn-success btn-icon-split">
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
@@ -107,9 +97,8 @@ Swal.fire({
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Nombre</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Carrera</th>
-                            <th scope="col">Materias</th>
+                            <th scope="col">estado</th>
+                            <th scope="col">lugar</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
@@ -117,55 +106,24 @@ Swal.fire({
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Nombre</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Carrera</th>
-                            <th scope="col">Materias</th>
+                            <th scope="col">estado</th>
+                            <th scope="col">lugar</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php foreach($list_alumnos as $regis_a){ 
-                            $id=(int)$regis_a['ID_usuario'];
-                            $sql=$conn->prepare("SELECT * FROM `tbl_usuarios` WHERE ID=$id");
-                            $sql->execute();
-                            $regis_u=$sql->fetch(PDO::FETCH_ASSOC); ?>
+                        <?php foreach($list_aulas as $regis){ ?>
                         <tr class="">
-                            <td scope="col"><?php echo $regis_a['ID']; ?></td>
-                            <?php
-                            if($sql->rowCount() > 0){ ?>
-                            <td scope="col"><?php echo $regis_u['nombre']; ?></td>
-                            <td scope="col">
-                                <img width="50" src="../../../img/users/<?php echo $regis_u['foto']; ?>" />
-                            </td>
-                            <?php } ?>
-                            <td scope="col"><?php echo $regis_a['carrera']; ?></td>
-                            <td scope="col">
-                                <ul class="nav justify-content-center flex-column">
-                                    <?php $regis_h = explode(",", $regis_a['ID_materias']);        
-                                foreach ($regis_h as $key => $value) { 
-                                    $sql=$conn->prepare("SELECT * FROM `tbl_materias` WHERE ID=:id_m");
-                                    $sql->bindParam(":id_m",$value);
-                                    $sql->execute();
-                                    $regis_m=$sql->fetch(PDO::FETCH_ASSOC);
-                                    ?>
-                                    <li class="">
-                                        <a class="nav-link disabled">->
-                                            <?php echo $regis_m['ID']; ?>:
-                                            <?php echo $regis_m['nombre']; ?>
-                                        </a>
-                                    </li>
-                                    <?php
-                                }
-                                ?>
-                                </ul>
-                            </td>
+                            <td scope="col"><?php echo $regis['ID']; ?></td>
+                            <td scope="col"><?php echo $regis['nombre']; ?></td>
+                            <td scope="col"><?php echo $regis['estado']; ?></td>
+                            <td scope="col"><?php echo $regis['lugar']; ?></td>
                             <td>
-                                <a class="btn btn-warning btn-circle"
-                                    href="edit.php?txtID=<?php echo $regis_a['ID']; ?>">
+                                <a class="btn btn-warning btn-circle" href="edit.php?txtID=<?php echo $regis['ID']; ?>">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <a href="#" class="btn btn-danger btn-circle"
-                                    onclick="confirDelate(<?php echo $regis_a['ID']; ?>)">
+                                    onclick="confirDelate(<?php echo $regis['ID']; ?>)">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>

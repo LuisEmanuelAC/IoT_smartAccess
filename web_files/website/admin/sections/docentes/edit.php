@@ -1,6 +1,6 @@
 <?php 
 
-include("../../config/bd.php");
+include("../../../config/bd.php");
 //exportar de la BD a la tabla
 if(isset($_GET['txtID'])){
     $txtID=(isset($_GET['txtID']))?$_GET['txtID']:"";
@@ -17,7 +17,7 @@ if(isset($_GET['txtID'])){
 
     $fullname=$regis_u['nombre'];
     $email=$regis_u['correo'];
-    $password=$regis_u['contraseña'];
+    $password=$regis_u['contrasena'];
     $carrera=$regis_a['carrera'];
     $image=$regis_u['foto'];
 
@@ -36,7 +36,7 @@ if ($_POST) {
     $sql->bindParam(":carrera",$carrera);
     $sql->execute();
 
-    $sql=$conn->prepare("UPDATE tbl_usuarios SET nombre=:nombre, correo=:correo, contraseña=:contrasena WHERE ID=:ID_u");
+    $sql=$conn->prepare("UPDATE tbl_usuarios SET nombre=:nombre, correo=:correo, contrasena=:contrasena WHERE ID=:ID_u");
 
     $sql->bindParam(":ID_u",$ID_u);
     $sql->bindParam(":nombre",$fullname, PDO::PARAM_STR);

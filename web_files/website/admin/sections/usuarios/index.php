@@ -1,5 +1,5 @@
 <?php 
-include("../../config/bd.php");
+include("../../../config/bd.php");
 
 //Borrar
 if(isset($_GET['txtID'])){

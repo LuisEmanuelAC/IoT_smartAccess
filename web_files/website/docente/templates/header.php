@@ -1,7 +1,6 @@
 <?php 
 session_start();
 $url_base="http://localhost/Iot_smartAccess/web_files/website/";
-
 define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
 include(ROOT_PATH . '/config/bd.php');
 
@@ -9,15 +8,15 @@ if (!isset($_SESSION['user'])) {
     header("Location:".$url_base."sections/login.php");
 } else {
     $ID_USUARIO_SESION = $_SESSION['user'];
-    // Ahora puedes usar $ID_usuario en este archivo
+    // Ahora puedes usar $ID_USUARIO_SESION en este archivo
 }
+
 
 //Lista de usuario
 $sql=$conn->prepare("SELECT * FROM `tbl_usuarios` WHERE ID=:id");
 $sql->bindParam(":id",$ID_USUARIO_SESION);
 $sql->execute();
 $usuario=$sql->fetch(PDO::FETCH_ASSOC);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,22 +60,21 @@ $usuario=$sql->fetch(PDO::FETCH_ASSOC);
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
-                href="<?php echo $url_base; ?>admin/index.php">
+                href="<?php echo $url_base; ?>alumno/sections/index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
             </a>
 
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/usuarios/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Usuarios</span></a>
+                <a class="nav-link" href="<?php echo $url_base; ?>alumno/sections/index.php">
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>Inicio</span></a>
             </li>
 
             <!-- Divider -->
@@ -84,63 +82,14 @@ $usuario=$sql->fetch(PDO::FETCH_ASSOC);
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/admins/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Admins</span></a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/alumnos/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Alumnos</span></a>
+                <a class="nav-link" href="<?php echo $url_base; ?>alumno/sections/horario/index.php">
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>Horario</span></a>
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/docentes/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Docentes</span></a>
-            </li>
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/materias/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Materias</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/aulas/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Aulas</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo $url_base; ?>admin/sections/control_aulas/index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>control aulas</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

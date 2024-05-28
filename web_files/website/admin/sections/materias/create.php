@@ -1,5 +1,5 @@
 <?php 
-include("../../config/bd.php");
+include("../../../config/bd.php");
 
 $aula = "";
 $turno = "";
@@ -9,27 +9,40 @@ $ID_docente = "";
 if ($_POST) {
     $materia=(isset($_POST['materia']))?$_POST['materia']:"";
     $ID_docente=(isset($_POST['ID_docente']))?$_POST['ID_docente']:"";
-    $aula=(isset($_POST['aula']))?$_POST['aula']:"";
+    $ID_aula=(isset($_POST['ID_aula']))?$_POST['ID_aula']:"";
     $turno=(isset($_POST['turno']))?$_POST['turno']:"";
     $creditos=(isset($_POST['creditos']))?$_POST['creditos']:"";
     $list_horario=(isset($_POST['horario']))?$_POST['horario']:"";
 
-    $horario="";
-    foreach ($list_horario as $index => $dia) {
-        if ($index == 0) {
-            $horario=$dia;
-        }
-        if (count($list_horario) > 1 && $index >= 1) {
-            $horario=$horario.",".$dia;
-        }
-    }
+    $horario = "";
+    $noComa = false;
     
-    $sql=$conn->prepare("INSERT INTO `tbl_materias` (`ID`, `materia`, `ID_docente`, `aula`, `turno`, `creditos`, `horario`) 
-    VALUES (NULL, :materia, :ID_docente, :aula, :turno, :creditos, :horario)");
+    foreach ($list_horario as $index => $value) {
+        if ($index == 0) {
+            $horario = $value;
+            $noComa = ($value == "$");
+        } else {
+            if ($value == "$") {
+                $horario = $horario . $value;
+                $noComa = true;
+            } else {
+                if ($noComa) {
+                    $horario = $horario . $value;
+                } else {
+                    $horario = $horario . "," . $value;
+                }
+                $noComa = false;
+            }
+        }
+    }   
 
-    $sql->bindParam(":materia",$materia, PDO::PARAM_STR);  
+    
+    $sql=$conn->prepare("INSERT INTO `tbl_materias` (`ID`, `nombre`, `ID_docente`, `ID_aula`, `turno`, `creditos`, `horario`) 
+    VALUES (NULL, :nombre, :ID_docente, :ID_aula, :turno, :creditos, :horario)");
+
+    $sql->bindParam(":nombre",$materia, PDO::PARAM_STR);  
     $sql->bindParam(":ID_docente",$ID_docente);
-    $sql->bindParam(":aula",$aula);
+    $sql->bindParam(":ID_aula",$ID_aula);
     $sql->bindParam(":turno",$turno);
     $sql->bindParam(":creditos",$creditos);
     $sql->bindParam(":horario",$horario);
@@ -46,6 +59,11 @@ JOIN tbl_docentes d ON u.ID = d.ID_usuario");
 $sql->execute();
 $list_docentes=$sql->fetchAll(PDO::FETCH_ASSOC);
 
+//Lista de aulas
+$sql=$conn->prepare("SELECT * FROM `tbl_aulas`");
+$sql->execute();
+$list_aulas=$sql->fetchAll(PDO::FETCH_ASSOC);
+
 
 include("../../templates/header.php"); ?>
 
@@ -54,8 +72,8 @@ include("../../templates/header.php"); ?>
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Crear docente</h1>
-    <p class="mb-4">Llena este formulario y presiona el botón de añadir para crear un nuevo usuario</p>
+    <h1 class="h3 mb-2 text-gray-800">Crear materia</h1>
+    <p class="mb-4">Llena este formulario y presiona el botón de añadir para crear una nueva materia</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -101,22 +119,26 @@ include("../../templates/header.php"); ?>
                     <a class="navbar-brand">Aula</a>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
-                            <select required name="aula" id="aula" class="form-select form-select-sm form-control"
-                                aria-label="Small select example" require>
-                                <option selected>Aulas</option>
-                                <option value="LC1" <?php if($aula == 'LC1') echo 'selected'; ?>>LC1</option>
-                                <option value="LC2" <?php if($aula == 'LC2') echo 'selected'; ?>>LC2</option>
-                                <option value="LC3" <?php if($aula == 'LC3') echo 'selected'; ?>>LC3</option>
-                                <option value="LC4" <?php if($aula == 'LC4') echo 'selected'; ?>>LC4</option>
-                                <option value="LC5" <?php if($aula == 'LC5') echo 'selected'; ?>>LC5</option>
-                                <option value="LC6" <?php if($aula == 'LC6') echo 'selected'; ?>>LC6</option>
-
+                            <select required name="ID_aula" id="ID_aula" class="form-select form-select-sm form-control"
+                                aria-label="Small select example">
+                                <option selected>menu aula</option>
+                                <?php                    
+                                if ($list_aulas) {
+                                    // Salida de cada fila
+                                    foreach($list_aulas as $regis_a){ ?>
+                                <option value="<?php echo $regis_a['ID']; ?>">
+                                    <?php echo $regis_a['nombre'] ; ?>
+                                </option>
+                                <?php
+                                    }
+                                } else {?>
+                                <option value="0">nada</option>
+                                <?php
+                                }?>
                             </select>
                         </li>
                     </ul>
                 </nav>
-
-
 
                 <nav class="navbar navbar-expand navbar-light bg-light md-4">
                     <a class="navbar-brand">Turno</a>
@@ -154,8 +176,6 @@ include("../../templates/header.php"); ?>
                                 <a class="navbar-brand">Día: 1</a>
                                 <ul class="navbar-nav ml-auto">
                                     <li class="nav-item dropdown">
-                                        <input value="d>" type="text" class="form-control" name="horario[]" id="horario"
-                                            style="display: none;">
                                         <label class="form-label">Día:</label>
                                         <select required name="horario[]" id="horario"
                                             class="form-select form-select-sm form-control"
@@ -175,23 +195,23 @@ include("../../templates/header.php"); ?>
                                         </select>
                                     </li>
 
-                                    <input value="hi>" type="text" class="form-control" name="horario[]" id="horario"
-                                        style="display: none;">
                                     <li class="nav-item dropdown">
                                         <label class="form-label">Hora inicio:</label>
                                         <input type="time" class="form-control form-control-user" name="horario[]"
                                             id="horario" aria-describedby="helpId" required>
                                     </li>
 
-                                    <input value="hf>" type="text" class="form-control" name="horario[]" id="horario"
-                                        style="display: none;">
+
                                     <li class="nav-item dropdown">
                                         <label class="form-label">Hora final:</label>
                                         <input type="time" class="form-control form-control-user" name="horario[]"
                                             id="horario" aria-describedby="helpId" required>
                                     </li>
-                                    <input value="$" type="text" class="form-control" name="horario[]" id="horario"
-                                        style="display: none;">
+                                    <li>
+                                        <input value="$" type="text" class="form-control" name="horario[]" id="horario"
+                                            style="display: none;">
+
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
@@ -236,4 +256,4 @@ include("../../templates/header.php"); ?>
 <script>
 var cont = 1;
 </script>
-<script src="../../templates/js/list_horario.js"></script>
+<script src="../../../js/list_horario.js"></script>

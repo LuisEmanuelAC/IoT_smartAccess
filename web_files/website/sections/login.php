@@ -1,17 +1,19 @@
 <?php
 session_start();
+
+$url_base="http://localhost/Iot_smartAccess/web_files/website/";
 //buscar ususrio en la tabla a la BD
 if ($_POST) { 
-    include("admin/bd.php");
+    include("../config/bd.php");  
 
-    $username=(isset($_POST['username']))?$_POST['username']:"";
+    $email=(isset($_POST['email']))?$_POST['email']:"";
     $password=(isset($_POST['password']))?md5($_POST['password']):"";
  
 
-    $sql=$conn->prepare("SELECT *, count(*) as n_user FROM `tbl_users` WHERE username=:username AND password=:password");
+    $sql=$conn->prepare("SELECT *, count(*) as n_user FROM `tbl_usuarios` WHERE correo=:correo AND contrasena=:contra");
     
-    $sql->bindParam(":username",$username, PDO::PARAM_STR); 
-    $sql->bindParam(":password",$password, PDO::PARAM_STR);
+    $sql->bindParam(":correo",$email, PDO::PARAM_STR); 
+    $sql->bindParam(":contra",$password, PDO::PARAM_STR);
     $sql->execute();
 
     $list_users=$sql->fetch(PDO::FETCH_LAZY);
@@ -19,14 +21,33 @@ if ($_POST) {
    if ($list_users['n_user']>0) {
         print_r("si exixte");
 
-        $_SESSION['user']=$list_users['username'];
+        $_SESSION['user']=$list_users['ID'];
         $_SESSION['loggedin']=true;
-        header("Location:index.php");
+
+        switch ($list_users['tipo']) {
+            case 'admin':
+                header("Location:". $url_base . "admin/sections/index.php");              
+                break;
+
+            case 'docente':
+                header("Location:". $url_base . "docente/sections/index.php");              
+                break;
+
+            case 'alumno':
+                header("Location:". $url_base . "alumno/sections/index.php");              
+                break;
+            
+            default:
+                header("Location:". $url_base . "sections/404.php");
+                break;
+        }
+
     }else {
         $message_userDExist="User or password does not exist";
     }    
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,13 +62,13 @@ if ($_POST) {
     <title>SB Admin 2 - Login</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url_base; ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="<?php echo $url_base; ?>css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -70,15 +91,30 @@ if ($_POST) {
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    <form class="user">
+                                    <br><br>
+                                    <?php if (isset($message_userDExist)) { ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                        <strong>Error: </strong><?php echo $message_userDExist; ?>
+                                    </div>
+                                    <?php } ?>
+
+                                    <script>
+                                    var alertList = document.querySelectorAll(".alert");
+                                    alertList.forEach(function(alert) {
+                                        new bootstrap.Alert(alert);
+                                    });
+                                    </script>
+                                    <form class="user" action="" method="post">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                            <input type="email" class="form-control form-control-user" name="email"
+                                                id="email" aria-describedby="emailHelp"
+                                                placeholder="Enter Email Address..." required>
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                                name="password" id="password" placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -87,16 +123,7 @@ if ($_POST) {
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>
-                                        <hr>
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a>
+                                        <button class="btn btn-primary btn-user btn-block" type="submit">Login</button>
                                     </form>
                                     <hr>
                                     <div class="text-center">

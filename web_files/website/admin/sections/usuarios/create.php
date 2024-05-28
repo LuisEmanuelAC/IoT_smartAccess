@@ -1,5 +1,5 @@
 <?php 
-include("../../config/bd.php");
+include("../../../config/bd.php");
 
 
 //insertar lo de la tabla a la BD
@@ -21,7 +21,8 @@ if ($_POST) {
         //print_r('se creo la imagen');
     }  
 
-    $sql=$conn->prepare("INSERT INTO `tbl_usuarios` (`ID`, `nombre`, `foto`, `correo`, `contraseña`, `tipo`) VALUES (NULL, :nombre, :foto, :correo, :contrasena, :tipo)");
+    $sql=$conn->prepare("INSERT INTO `tbl_usuarios` (`ID`, `nombre`, `foto`, `correo`, `contrasena`, `tipo`) 
+    VALUES (NULL, :nombre, :foto, :correo, :contrasena, :tipo)");
 
     $sql->bindParam(":nombre",$fullname, PDO::PARAM_STR);
     $sql->bindParam(":foto",$name_file_image);

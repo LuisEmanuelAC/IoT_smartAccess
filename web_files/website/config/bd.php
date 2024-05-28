@@ -1,4 +1,6 @@
 <?php
+//define('ROOT_PATH', dirname(dirname(__FILE__)));
+
 $server="localhost";
 $Database="smart-access";
 $user="root";
